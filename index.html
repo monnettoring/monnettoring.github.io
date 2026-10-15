@@ -433,12 +433,12 @@
                   <code>inventory/devices.yaml</code>
                 </div>
                 <dl class="inventory-intake-list">
-                  <div><dt>Manual YAML</dt><dd>Define devices in <code>inventory/devices.yaml</code>.</dd></div>
-                  <div><dt>GUI / REST API</dt><dd>Add devices through the device console or API.</dd></div>
-                  <div><dt>IP/CIDR ranges</dt><dd>Probe addresses in configured network ranges.</dd></div>
-                  <div><dt>Seed file</dt><dd>Read specific hosts and optional ports from a text file.</dd></div>
-                  <div><dt>Ansible inventory</dt><dd>Read hosts from an existing Ansible YAML inventory.</dd></div>
-                  <div><dt>NetBox</dt><dd>Fetch active devices with primary IPs, when configured.</dd></div>
+                  <div><dt>Manual YAML</dt><dd>Define devices directly in the committed <code>inventory/devices.yaml</code> file. Each entry records the device's management details and references its named credentials.</dd></div>
+                  <div><dt>GUI / REST API</dt><dd>Add devices through the device console or the control-plane API, without editing YAML by hand. The existing onboarding path validates the entry, renders collector state, and records an audit event.</dd></div>
+                  <div><dt>IP/CIDR ranges</dt><dd>Configure a subnet for the discovery scanner to probe, such as <code>192.168.189.0/24</code>. It checks addresses using the configured discovery protocols and credentials to find reachable devices.</dd></div>
+                  <div><dt>Seed file</dt><dd>Provide known targets in a plain-text file, with one host or <code>host:port</code> per line. The scanner uses these addresses as discovery inputs instead of scanning an entire subnet.</dd></div>
+                  <div><dt>Ansible inventory</dt><dd>Reuse hosts listed in an existing Ansible YAML inventory. The scanner reads <code>ansible_host</code> values and can use group names as site or role hints when probing devices.</dd></div>
+                  <div><dt>NetBox</dt><dd>When its URL and access token are configured, discovery can fetch active NetBox devices that have primary IP addresses. The integration remains inactive until the NetBox URL is set.</dd></div>
                 </dl>
                 <p class="inventory-intake-note">Discovered devices are onboarded automatically when eligible or after admin approval; managed devices are recorded in <code>inventory/devices.yaml</code>.</p>
               </section>
