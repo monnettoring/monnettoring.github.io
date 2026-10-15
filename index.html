@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="monNETtoring is a telemetry-first, monitoring-as-code platform built from proven open-source components.">
+  <meta name="theme-color" content="#111916">
+  <title>monNETtoring  -  Telemetry-first network monitoring</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to main content</a>
+  <canvas class="network-background" id="network-background" aria-hidden="true"></canvas>
+  <canvas class="network-background network-background-secondary" id="network-background-secondary" aria-hidden="true"></canvas>
+  <svg class="network-motion" id="network-motion" aria-hidden="true"></svg>
+  <header class="site-header">
+    <div class="container nav-shell">
+      <a class="brand" href="#top" aria-label="monNETtoring home">
+        <span class="brand-mark monNETtoring-logo logo-on-dark" aria-hidden="true"></span>
+        <span class="brand-wordmark">monNETtoring</span>
+      </a>
+
+      <div class="nav-context" aria-live="polite" aria-atomic="true">
+        <b data-nav-number>00</b><span data-nav-label>Overview</span>
+      </div>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#platform" data-section-link="platform">Architecture</a>
+        <a href="#workflow" data-section-link="workflow">Data path</a>
+        <a href="#reliability" data-section-link="reliability">Monitoring as code</a>
+        <a class="github-link" href="https://github.com/monNETtoring?tab=repositories" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19 1s-1.4-.4-4 1.5a13.4 13.4 0 0 0-6 0C6.4.6 5 1 5 1a5 5 0 0 0-.4 3A5.4 5.4 0 0 0 3.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 9 18v4M9 18c-4.5 2-5-2-7-2" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>Open source · GitHub <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+
+      <a class="header-cta" href="#contact" data-section-link="contact">Contact the developers</a>
+      <button class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-menu">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 8h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation" aria-hidden="true">
+      <a href="#platform" data-section-link="platform">
+        <span><strong>Architecture</strong><small>Telemetry, normalization, flows, and events</small></span>
+        <span class="mobile-link-index">01</span>
+      </a>
+      <a href="#workflow" data-section-link="workflow">
+        <span><strong>Data path</strong><small>Collectors, broker, storage, alerts, and dashboards</small></span>
+        <span class="mobile-link-index">02</span>
+      </a>
+      <a href="#reliability" data-section-link="reliability">
+        <span><strong>Monitoring as code</strong><small>Versioned configuration on proven OSS</small></span>
+        <span class="mobile-link-index">03</span>
+      </a>
+      <a class="mobile-github" href="https://github.com/monNETtoring?tab=repositories" target="_blank" rel="noopener noreferrer">
+        <span><strong><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19 1s-1.4-.4-4 1.5a13.4 13.4 0 0 0-6 0C6.4.6 5 1 5 1a5 5 0 0 0-.4 3A5.4 5.4 0 0 0 3.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 9 18v4M9 18c-4.5 2-5-2-7-2" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>Open source · GitHub <span class="external-mark" aria-hidden="true">↗</span></strong><small>Source, issues, releases, and contributions</small></span>
+        <span class="mobile-link-index">External</span>
+      </a>
+      <a class="mobile-contact" href="#contact" data-section-link="contact">
+        <span><strong>Contact the developers</strong><small>Technical questions and onboarding</small></span>
+        <span class="mobile-link-index">04</span>
+      </a>
+    </nav>
+  </header>
+
+  <nav class="section-index" aria-label="Page sections">
+    <a href="#platform" data-section-link="platform"><span>01</span><strong>Architecture</strong></a>
+    <a href="#workflow" data-section-link="workflow"><span>02</span><strong>Data path</strong></a>
+    <a href="#reliability" data-section-link="reliability"><span>03</span><strong>As code</strong></a>
+    <a href="#contact" data-section-link="contact"><span>04</span><strong>Contact</strong></a>
+  </nav>
+<main id="top">
+  <section class="hero">
+    <div class="container">
+      <div class="hero-intro">
+
+        <div class="hero-title">
+
+          <h1>Stream first. Poll when needed.</h1>
+          <div class="eyebrow logo-eyebrow">
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 902'%3E%3C/svg%3E"
+              alt="monNETtoring"
+              style="height:312px;width:auto;filter:drop-shadow(0 0 5px rgba(255,255,255,.25));"
+            >
+          </div>
+
+          <div class="eyebrow">Telemetry-first network monitoring</div>
+
+        </div>
+
+        <div class="hero-summary">
+          <p>One operational model for streamed metrics, polled devices, active probes, flows, and events - built entirely from configured open-source components.</p>
+
+          <div class="hero-actions">
+            <a class="button" href="#platform">
+              Explore the architecture
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a class="button secondary" href="#reliability">Monitoring as code</a>
+          </div>
+
+          <dl class="hero-facts">
+            <div><dt>gNMI first</dt><dd>streaming telemetry is the primary path</dd></div>
+            <div><dt>One schema</dt><dd>source stays a label, never a dashboard concern</dd></div>
+            <div><dt>Config as code</dt><dd>collectors, rules, and monitors stay versioned</dd></div>
+          </dl>
+        </div>
+
+      </div>
+    </div>
+
+        <div class="architecture-thesis">
+          <p><strong>monNETtoring is a telemetry-first network monitoring platform:</strong> gNMI streaming is the primary data path, SNMP polling is the fallback, and active ICMP/HTTP probing covers path health. Every source is normalized to <strong>one canonical schema</strong> where <code>source</code> is just a label - a dashboard or alert never needs to know whether a number arrived by stream or by poll.</p>
+          <p>A parallel <strong>flows lane</strong> (NetFlow/sFlow → ClickHouse) adds per-flow drill-down beside the metrics, and an <strong>events lane</strong> (syslog + SNMP traps → the same ClickHouse) explains <em>why</em> a number moved. Both lanes share only the broker. <strong>Open source and config-over-code by design: no bespoke services, only configured components you can inspect, version, and replace.</strong></p>
+        </div>
+
+        <div class="product-stage" data-reveal>
+          <div class="architecture-board" aria-label="monNETtoring reference architecture graph">
+            <div class="architecture-board-head">
+              <div class="architecture-board-title"><span class="monNETtoring-logo motif-mini" aria-hidden="true"></span>Reference architecture</div>
+              <div class="architecture-board-meta"><b>Open source</b></div>
+            </div>
+
+            <svg class="architecture-graph" viewBox="0 0 1160 510" role="img" aria-labelledby="architecture-graph-title architecture-graph-desc">
+              <title id="architecture-graph-title">monNETtoring telemetry reference architecture</title>
+              <desc id="architecture-graph-desc">gNMI, SNMP, active probes, flows, and events feed source-specific collectors. A Kafka-compatible broker provides the shared ingestion layer. Vector normalizes metrics into VictoriaMetrics, while ClickHouse stores flows and events. Grafana queries both stores and the alerting chain runs from VictoriaMetrics through vmalert and Alertmanager.</desc>
+
+              <path id="edge-gnmi" class="arch-edge metrics" d="M176 87 H232"/>
+              <path class="arch-edge metrics" d="M362 87 C400 87 407 219 446 232"/>
+              <path class="arch-edge muted" d="M176 168 H232"/>
+              <path class="arch-edge metrics" d="M362 168 C400 168 410 227 446 239"/>
+              <path class="arch-edge muted" d="M176 249 H232"/>
+              <path class="arch-edge metrics" d="M297 276 V302 C297 324 376 324 394 302 C408 285 417 260 446 249"/>
+              <path id="edge-flows" class="arch-edge flows" d="M176 344 H232"/>
+              <path class="arch-edge flows" d="M362 344 C400 344 414 275 446 259"/>
+              <path class="arch-edge events" d="M176 425 C265 425 355 309 446 267"/>
+
+              <path id="edge-normalize" class="arch-edge metrics" d="M586 232 C624 232 626 130 664 130"/>
+              <path class="arch-edge metrics" d="M804 130 H852"/>
+              <path class="arch-edge metrics" d="M1002 130 C1032 130 1034 214 1060 229"/>
+              <path id="edge-storeflows" class="arch-edge flows" d="M586 258 C648 273 731 322 852 330"/>
+              <path class="arch-edge events" d="M586 270 C665 303 734 352 852 342"/>
+              <path class="arch-edge flows" d="M1002 336 C1035 336 1037 271 1060 258"/>
+
+              <path class="arch-edge alerting" d="M927 157 C927 190 782 382 753 403"/>
+              <path class="arch-edge alerting" d="M818 430 H852"/>
+              <path class="arch-edge alerting" d="M982 430 H1030"/>
+
+              <g class="arch-node" transform="translate(36 60)"><rect width="140" height="54"/><text x="15" y="24">gNMI devices</text><text class="sub" x="15" y="40">stream telemetry</text></g>
+              <g class="arch-node" transform="translate(36 141)"><rect width="140" height="54"/><text x="15" y="24">SNMP devices</text><text class="sub" x="15" y="40">poll fallback</text></g>
+              <g class="arch-node" transform="translate(36 222)"><rect width="140" height="54"/><text x="15" y="24">ICMP / HTTP</text><text class="sub" x="15" y="40">active targets</text></g>
+              <g class="arch-node" transform="translate(36 317)"><rect width="140" height="54"/><text x="15" y="24">NetFlow / sFlow</text><text class="sub" x="15" y="40">flow exporters</text></g>
+              <g class="arch-node" transform="translate(36 398)"><rect width="140" height="54"/><text x="15" y="24">syslog + traps</text><text class="sub" x="15" y="40">device events</text></g>
+
+              <g class="arch-node" transform="translate(232 60)"><rect width="130" height="54"/><text x="16" y="25">gnmic</text><text class="sub" x="16" y="41">collector</text></g>
+              <g class="arch-node" transform="translate(232 141)"><rect width="130" height="54"/><text x="16" y="25">telegraf</text><text class="sub" x="16" y="41">collector</text></g>
+              <g class="arch-node" transform="translate(232 222)"><rect width="130" height="54"/><text x="16" y="25">cloudprober</text><text class="sub" x="16" y="41">probe engine</text></g>
+              <g class="arch-node" transform="translate(232 317)"><rect width="130" height="54"/><text x="16" y="25">goflow2</text><text class="sub" x="16" y="41">flow collector</text></g>
+
+              <g class="arch-node core" transform="translate(446 210)"><rect width="140" height="78"/><text x="18" y="34" style="font-size:10.5px">Kafka-compatible</text><text class="sub" x="22" y="54">shared broker</text></g>
+              <g class="arch-node core" transform="translate(664 103)"><rect width="140" height="54"/><text x="18" y="24">Vector</text><text class="sub" x="18" y="40">canonical/v1</text></g>
+              <g class="arch-node store" transform="translate(852 103)"><rect width="150" height="54"/><text x="16" y="24">VictoriaMetrics</text><text class="sub" x="16" y="40">metrics store</text></g>
+              <g class="arch-node event-store" transform="translate(852 309)"><rect width="150" height="54"/><text x="16" y="24">ClickHouse</text><text class="sub" x="16" y="40">flows + events</text></g>
+              <g class="arch-node" transform="translate(1060 214)"><rect width="78" height="62"/><text x="12" y="28">Grafana</text><text class="sub" x="12" y="45">query</text></g>
+
+              <g class="arch-node alert" transform="translate(688 403)"><rect width="130" height="54"/><text x="15" y="24">vmalert</text><text class="sub" x="15" y="40">evaluate</text></g>
+              <g class="arch-node alert" transform="translate(852 403)"><rect width="130" height="54"/><text x="15" y="24">Alertmanager</text><text class="sub" x="15" y="40">route</text></g>
+              <g class="arch-node alert" transform="translate(1030 403)"><rect width="108" height="54"/><text x="14" y="24">alert-sink</text><text class="sub" x="14" y="40">deliver</text></g>
+
+              <circle class="arch-packet" r="3" fill="#54df9e"><animateMotion dur="4.8s" repeatCount="indefinite"><mpath href="#edge-gnmi"/></animateMotion></circle>
+              <circle class="arch-packet" r="3" fill="#54df9e"><animateMotion dur="6.4s" begin="-2s" repeatCount="indefinite"><mpath href="#edge-normalize"/></animateMotion></circle>
+              <circle class="arch-packet" r="3" fill="#6a9df8"><animateMotion dur="5.8s" begin="-1.4s" repeatCount="indefinite"><mpath href="#edge-flows"/></animateMotion></circle>
+              <circle class="arch-packet" r="3" fill="#6a9df8"><animateMotion dur="7.2s" begin="-3.2s" repeatCount="indefinite"><mpath href="#edge-storeflows"/></animateMotion></circle>
+            </svg>
+
+            <div class="architecture-legend" aria-label="Architecture graph legend">
+              <span><i></i>metrics</span><span><i></i>flows</span><span><i></i>events</span><span><i></i>alerting</span>
+            </div>
+          </div>
+          <div class="hero-note">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 12 3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4"/></svg>
+            Metrics, flows, and events stay separate workloads; only the broker is shared.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="context-strip" aria-label="Live network estate summary">
+      <div class="container context-inner">
+        <p><span>Telemetry architecture<small>One canonical model</small></span></p>
+        <div class="context-list">
+          <span><b>gNMI</b><small>primary stream</small></span>
+          <span><b>SNMP</b><small>polling fallback</small></span>
+          <span><b>ICMP/HTTP</b><small>active path probes</small></span>
+          <span><b>3 lanes</b><small>metrics · flows · events</small></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="oss-band" aria-label="Open source project">
+      <div class="container oss-band-inner">
+        <div class="oss-band-copy">
+          <span class="monNETtoring-logo motif-mini logo-on-light" aria-hidden="true"></span>
+          <div><strong>Open source.</strong><span>Architecture, configuration, schemas, rules, and deployment patterns are available in the repository.</span></div>
+        </div>
+        <a class="oss-band-link github-link" href="https://github.com/monNETtoring?tab=repositories" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19 1s-1.4-.4-4 1.5a13.4 13.4 0 0 0-6 0C6.4.6 5 1 5 1a5 5 0 0 0-.4 3A5.4 5.4 0 0 0 3.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 9 18v4M9 18c-4.5 2-5-2-7-2" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>Explore GitHub repositories <span class="external-mark" aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="section" id="platform">
+      <div class="container">
+        <div class="section-kicker"><span class="monNETtoring-logo motif-mini logo-on-light" aria-hidden="true"></span>Telemetry architecture</div>
+        <div class="section-heading">
+          <h2>Many protocols in. One operational model out.</h2>
+          <p>The transport can change without forcing dashboards, alerts, or downstream queries to change. Collection is source-specific; everything after normalization is not.
+            <a class="inline-github" href="https://github.com/monNETtoring?tab=repositories" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19 1s-1.4-.4-4 1.5a13.4 13.4 0 0 0-6 0C6.4.6 5 1 5 1a5 5 0 0 0-.4 3A5.4 5.4 0 0 0 3.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 9 18v4M9 18c-4.5 2-5-2-7-2" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>Open source: inspect the configuration and contribute on GitHub <span class="external-mark" aria-hidden="true">↗</span></a>
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card" data-reveal>
+            <div class="card-number"><span>01 / Collection paths</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 13h5l2-7 3 12 2-5h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Stream first, poll as a fallback</h3>
+            <p><strong>gnmic</strong> streams gNMI from capable routers and switches. <strong>telegraf</strong> polls SNMP where streaming is unavailable and also scrapes <strong>cloudprober</strong> for ICMP and HTTP path-health checks.</p>
+            <div class="protocol-grid" aria-label="Telemetry collection types">
+              <span class="protocol">gNMI · gnmic</span>
+              <span class="protocol">SNMP · telegraf</span>
+              <span class="protocol">ICMP · cloudprober</span>
+              <span class="protocol">HTTP · cloudprober</span>
+            </div>
+          </article>
+
+          <article class="feature-card" data-reveal>
+            <div class="card-number"><span>02 / Canonical schema</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="6" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="18" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 12h4c3 0 3-6 6-6M11 12c3 0 3 6 6 6" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <h3>Dashboards never branch on collection method</h3>
+            <p>Vector maps every measurement to the same field and label contract. The <code>source</code> label records provenance, but queries depend on stable names such as device, interface, metric, site, and timestamp.</p>
+            <div class="schema-graph" aria-label="Canonical schema graph">
+              <div class="schema-source-stack">
+                <div class="schema-source"><span>gNMI</span><span>stream</span></div>
+                <div class="schema-source"><span>SNMP</span><span>poll</span></div>
+                <div class="schema-source"><span>probes</span><span>active</span></div>
+              </div>
+              <div class="schema-normalizer"><strong>Vector</strong><small>normalize + validate</small></div>
+              <div class="schema-contract">
+                <strong>canonical / v1</strong>
+                <div class="schema-fields"><span>metric</span><span>device</span><span>interface</span><span>site</span><span class="source-field">source</span><span>value</span><span>timestamp</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="feature-card" data-reveal>
+            <div class="card-number"><span>03 / Parallel data lanes</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4a5 5 0 0 0-5 5v3l-2 3h14l-2-3V9a5 5 0 0 0-5-5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 18h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </div>
+            <h3>Metrics show what moved. Flows and events explain it.</h3>
+            <p>NetFlow, IPFIX, and sFlow retain per-conversation detail in ClickHouse. Syslog and SNMP traps land beside them, so operators can connect a metric change to traffic composition or a device event without forcing every workload into one store.</p>
+            <div class="lane-map" aria-label="Parallel telemetry workloads">
+              <div class="lane-row metrics"><strong>Metrics</strong><span class="lane-rail"></span><small>Vector → VictoriaMetrics</small></div>
+              <div class="lane-row flows"><strong>Flows</strong><span class="lane-rail"></span><small>goflow2 → ClickHouse</small></div>
+              <div class="lane-row events"><strong>Events</strong><span class="lane-rail"></span><small>syslog / traps → ClickHouse</small></div>
+            </div>
+          </article>
+
+          <article class="feature-card" data-reveal>
+            <div class="card-number"><span>04 / Monitoring as code</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Version the monitoring system, not just its targets</h3>
+            <p>Collectors, normalization transforms, probe targets, alert rules, dashboards, and routing policies are reviewed and deployed as configuration. The platform is assembled from OSS services rather than hidden behind bespoke application code.</p>
+            <div class="repo-map" aria-label="Monitoring as code repository flow">
+              <div class="repo-node"><strong>inventory/</strong><small>devices + targets</small></div>
+              <div class="repo-node"><strong>schema/</strong><small>canonical contract</small></div>
+              <div class="repo-node"><strong>rules/</strong><small>alerts + transforms</small></div>
+              <div class="repo-node"><strong>state/</strong><small>rendered collector config</small></div>
+            </div>
+          </article>
+        </div>
+
+
+        <div class="monNETtoring-mark-stage" data-reveal>
+          <div class="monNETtoring-mark-copy">
+            <small>monNETtoring mark</small>
+            <p>The greatest, user-friendliest design - and a perfect logo.</p>
+          </div>
+          <div class="monNETtoring-mark-panel">
+            <div class="monNETtoring-logo monNETtoring-mark-large" role="img" aria-label="monNETtoring logo"></div>
+          </div>
+        </div>
+        <a class="section-next" href="#workflow">
+          <small>02</small>
+          <span><em>Continue to</em>Data path</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="section workflow-section" id="workflow">
+      <div class="topology-divider on-dark" aria-hidden="true">
+        <svg viewBox="0 0 1440 66" preserveAspectRatio="none">
+          <path class="divider-route" d="M0 44 C190 45 224 16 402 24 S710 58 898 34 S1184 17 1440 30"/>
+          <path class="divider-branch" d="M402 24 C462 34 484 55 562 57 M898 34 C950 28 979 9 1065 8"/>
+          <circle class="divider-node" cx="402" cy="24" r="4.5"/><circle class="divider-node" cx="562" cy="57" r="3.5"/><circle class="divider-node" cx="898" cy="34" r="4.5"/><circle class="divider-node" cx="1065" cy="8" r="3.5"/>
+        </svg>
+      </div>
+      <div class="container">
+        <div class="section-kicker"><span class="monNETtoring-logo motif-mini logo-on-light" aria-hidden="true"></span>The normalized data path</div>
+        <div class="section-heading">
+          <h2>Collection changes. The contract does not.</h2>
+          <p>A Kafka-compatible broker decouples ingestion from processing. Vector enforces the canonical metrics contract before VictoriaMetrics, while ClickHouse independently consumes flows and events from the same broker.</p>
+        </div>
+
+        <div class="workflow-grid">
+          <div class="steps">
+            <article class="step" data-reveal>
+              <span class="step-index" aria-hidden="true"></span>
+              <div><h3>Collect at the best available fidelity</h3><p>gnmic streams gNMI, telegraf polls SNMP, and cloudprober produces active ICMP/HTTP measurements that telegraf scrapes.</p></div>
+            </article>
+            <article class="step" data-reveal>
+              <span class="step-index" aria-hidden="true"></span>
+              <div><h3>Normalize after the broker</h3><p>Collectors publish through a Kafka-compatible broker. Vector maps metrics into canonical/v1 so Grafana and vmalert query stable labels, not transport-specific fields.</p></div>
+            </article>
+            <article class="step" data-reveal>
+              <span class="step-index" aria-hidden="true"></span>
+              <div><h3>Store by workload</h3><p>VictoriaMetrics serves time-series metrics; ClickHouse keeps high-cardinality flows and events. Grafana brings the lanes together at query time.</p></div>
+            </article>
+          </div>
+
+          <div class="flow-map" aria-label="Normalized data-path graph" data-reveal>
+            <div class="flow-map-head"><span>Normalized data path</span><span>CANONICAL / V1</span></div>
+            <svg viewBox="0 0 660 335" role="img" aria-label="Collectors feed a Kafka-compatible broker, then split into metrics and flows and events storage paths">
+              <path id="wf-stream" class="flow-edge metrics" d="M132 70 C170 70 176 126 214 128"/>
+              <path class="flow-edge metrics" d="M132 145 H214"/>
+              <path class="flow-edge metrics" d="M132 220 C170 220 176 170 214 168"/>
+              <path id="wf-normalize" class="flow-edge metrics" d="M334 145 C360 145 362 115 390 115"/>
+              <path class="flow-edge metrics" d="M500 115 H548"/>
+              <path id="wf-flows" class="flow-edge flows" d="M334 171 C402 186 423 246 500 246 H548"/>
+              <path class="flow-edge events" d="M334 184 C400 214 440 279 548 279"/>
+
+              <g class="flow-node" transform="translate(30 47)"><rect width="102" height="46"/><text x="13" y="21">gnmic</text><text class="sub" x="13" y="34">gNMI stream</text></g>
+              <g class="flow-node" transform="translate(30 122)"><rect width="102" height="46"/><text x="13" y="21">telegraf</text><text class="sub" x="13" y="34">SNMP poll</text></g>
+              <g class="flow-node" transform="translate(30 197)"><rect width="102" height="46"/><text x="13" y="21">cloudprober</text><text class="sub" x="13" y="34">ICMP / HTTP</text></g>
+
+              <g class="flow-node core" transform="translate(214 112)"><rect width="120" height="72"/><text x="10" y="31" style="font-size:9.5px">Kafka-compatible</text><text class="sub" x="19" y="49">decouple ingestion</text></g>
+              <g class="flow-node core" transform="translate(390 89)"><rect width="110" height="52"/><text x="16" y="23">Vector</text><text class="sub" x="16" y="38">canonical/v1</text></g>
+              <g class="flow-node store" transform="translate(548 89)"><rect width="94" height="52"/><text x="12" y="23">Victoria</text><text class="sub" x="12" y="38">metrics</text></g>
+              <g class="flow-node store" transform="translate(548 235)"><rect width="94" height="66"/><text x="12" y="25">ClickHouse</text><text class="sub" x="12" y="42">flows</text><text class="sub" x="12" y="54">events</text></g>
+
+              <text x="382" y="231" fill="#6a9df8" font-size="8" font-family="ui-monospace,monospace">flows lane</text>
+              <text x="382" y="277" fill="#e3aa42" font-size="8" font-family="ui-monospace,monospace">events lane</text>
+              <circle r="3" fill="#54df9e"><animateMotion dur="4.6s" repeatCount="indefinite"><mpath href="#wf-stream"/></animateMotion></circle>
+              <circle r="3" fill="#54df9e"><animateMotion dur="5.3s" begin="-2s" repeatCount="indefinite"><mpath href="#wf-normalize"/></animateMotion></circle>
+              <circle r="3" fill="#6a9df8"><animateMotion dur="6.2s" begin="-1.5s" repeatCount="indefinite"><mpath href="#wf-flows"/></animateMotion></circle>
+            </svg>
+            <div class="flow-map-foot"><i></i>Grafana and vmalert query the stable contract rather than transport-specific fields.</div>
+          </div>
+        </div>
+
+        <a class="section-next" href="#reliability">
+          <small>03</small>
+          <span><em>Continue to</em>Monitoring as code</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" id="reliability">
+      <div class="topology-divider" aria-hidden="true">
+        <svg viewBox="0 0 1440 66" preserveAspectRatio="none">
+          <path class="divider-route" d="M0 32 C206 13 292 54 472 42 S749 14 918 29 S1194 50 1440 19"/>
+          <path class="divider-branch" d="M472 42 C522 34 553 12 625 10 M918 29 C988 37 1017 58 1102 58"/>
+          <circle class="divider-node" cx="472" cy="42" r="4.5"/><circle class="divider-node" cx="625" cy="10" r="3.5"/><circle class="divider-node" cx="918" cy="29" r="4.5"/><circle class="divider-node" cx="1102" cy="58" r="3.5"/>
+        </svg>
+      </div>
+      <div class="container">
+        <div class="section-kicker"><span class="monNETtoring-logo motif-mini logo-on-light" aria-hidden="true"></span>Why monitoring-as-code</div>
+        <div class="section-heading">
+          <h2>Rebuildable, reviewable, and explicit by design.</h2>
+          <p>Without version control, dashboards drift, collector configuration gets inconsistent, and alert changes are harder to review or reproduce.</p>
+        </div>
+
+        <div class="mac-overview">
+          <div class="failure-list" aria-label="Problems with unmanaged monitoring" data-reveal>
+            <div class="failure-head">
+              <span class="failure-state">Unmanaged</span>
+              <strong>Without version control</strong>
+            </div>
+            <div class="failure-row"><span>01</span><b>No reproducibility</b><p>You cannot reliably rebuild the stack.</p></div>
+            <div class="failure-row"><span>02</span><b>No review</b><p>Alert changes can go live without review.</p></div>
+            <div class="failure-row"><span>03</span><b>No history</b><p>There is no clear record of who changed what or why.</p></div>
+          </div>
+
+          <div class="contract-copy">
+            <p>Putting monitoring in Git buys review, rollback, diffability, and rebuild-from-nothing.</p>
+            <p><code>make up</code> → <code>make verify</code> is the repository’s proof: configuration should be sufficient to recreate the stack and executable verification should prove the pipeline is alive.</p>
+            <div class="contract-note">Git makes schema contracts explicit. Requirements such as “gNMI and SNMP emit the same metric names” live in <code>schema/canonical.md</code> instead of per-panel regular expressions.</div>
+          </div>
+        </div>
+
+        <div class="implementation-heading">
+          <h3>Implementation principles.</h3>
+          <p>Each one maps to a concrete boundary</p>
+        </div>
+
+        <div class="principle-index">
+          <article class="mac-principle" data-reveal>
+            <span>01</span>
+            <h4>Config-over-code; code only at the control plane.</h4>
+            <div class="mac-principle-copy">
+              <p>Nothing bespoke sits in the data path. gnmic, telegraf, cloudprober, Vector VRL, VictoriaMetrics, vmalert, and Alertmanager remain off-the-shelf components driven by committed configuration.</p>
+              <p>The single written service, <code>services/api</code>, renders configuration and serves the GUI; it never touches metrics. Every custom data-path service is something that pages you. Every configuration file is something you can diff.</p>
+            </div>
+          </article>
+
+          <article class="mac-principle" data-reveal>
+            <span>02</span>
+            <h4>Keep three layers of state strictly apart.</h4>
+            <div class="mac-principle-copy">
+              <p>Monitoring-as-code breaks when operators hand-edit derived files or a UI writes state that nothing reliably re-renders.</p>
+              <div class="state-layers" aria-label="Monitoring state layers">
+                <div class="state-layer"><b>Committed config</b><code>config/</code><small>Static component configuration, mounted read-only and ready for future ConfigMaps.</small></div>
+                <div class="state-layer"><b>Source of truth</b><code>inventory/</code><small>Devices, credentials, groups, and discovery seeds. Machine-writable, Git-tracked intent.</small></div>
+                <div class="state-layer derived"><b>Derived state</b><code>state/</code><small>Rendered collector targets. Gitignored, never hand-edited, and always regenerable.</small></div>
+              </div>
+              <section class="inventory-intake" aria-labelledby="inventory-intake-title">
+                <div class="inventory-intake-head">
+                  <h5 id="inventory-intake-title">Inventory sources</h5>
+                  <code>inventory/devices.yaml</code>
+                </div>
+                <dl class="inventory-intake-list">
+                  <div><dt>Manual YAML</dt><dd>Define devices in <code>inventory/devices.yaml</code>.</dd></div>
+                  <div><dt>GUI / REST API</dt><dd>Add devices through the device console or API.</dd></div>
+                  <div><dt>IP/CIDR ranges</dt><dd>Probe addresses in configured network ranges.</dd></div>
+                  <div><dt>Seed file</dt><dd>Read specific hosts and optional ports from a text file.</dd></div>
+                  <div><dt>Ansible inventory</dt><dd>Read hosts from an existing Ansible YAML inventory.</dd></div>
+                  <div><dt>NetBox</dt><dd>Fetch active devices with primary IPs, when configured.</dd></div>
+                </dl>
+                <p class="inventory-intake-note">Discovered devices are onboarded automatically when eligible or after admin approval; managed devices are recorded in <code>inventory/devices.yaml</code>.</p>
+              </section>
+            </div>
+          </article>
+
+          <article class="mac-principle" data-reveal>
+            <span>03</span>
+            <h4>One canonical schema; transport is a label.</h4>
+            <div class="mac-principle-copy">
+              <p>Normalization happens at ingest so <code>source=gnmi</code> and <code>source=snmp</code> label identical metric names. Dashboards and alert rules stay transport-agnostic instead of forking into unmaintainable duplicates.</p>
+              <div class="artifact-paths"><code>schema/canonical.md</code><span>→</span><code>Vector VRL</code><span>→</span><code>canonical metrics</code></div>
+            </div>
+          </article>
+
+          <article class="mac-principle" data-reveal>
+            <span>04</span>
+            <h4>Provision dashboards and alerts as artifacts.</h4>
+            <div class="mac-principle-copy">
+              <p>Dashboards and rules are committed and provisioned - never click-built. Raw Grafana JSON is adequate at the current scale; Grafonnet or grizzly remain the escape hatch if diff quality becomes the limiting factor.</p>
+              <div class="artifact-paths"><code>config/grafana/dashboards/</code><code>config/vmalert/rules/</code></div>
+            </div>
+          </article>
+
+          <article class="mac-principle" data-reveal>
+            <span>05</span>
+            <h4>Verification is part of the code.</h4>
+            <div class="mac-principle-copy">
+              <p><code>scripts/verify.sh</code> asserts that every source is present, rules are loaded, and authentication completes a round trip after each change. Version control without an executable health check merely versions the breakage.</p>
+              <p>The stack also monitors itself through an out-of-band self-scrape, <code>mon:</code> rules, and the Pipeline Health dashboard. A dead collector must never look like a quiet network.</p>
+              <div class="verification-flow"><code>make up</code><span>→</span><code>make verify</code><span>→</span><code>Pipeline Health</code></div>
+            </div>
+          </article>
+
+          <article class="mac-principle" data-reveal>
+            <span>06</span>
+            <h4>Use reconciliation, not imperative runtime edits.</h4>
+            <div class="mac-principle-copy">
+              <p>Discovery and GUI onboarding mutate the source of truth. The renderer regenerates derived targets and collectors re-read them through gnmic’s 30-second file loader and telegraf’s <code>--watch-config</code>.</p>
+              <p>No one-off change is pushed into a running collector. Imperative edits evaporate after restart and leave no Git history.</p>
+              <div class="reconcile-flow"><code>GUI / discovery</code><span>→</span><code>inventory/</code><span>→</span><code>renderer</code><span>→</span><code>state/</code><span>→</span><code>collectors</code></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="repo-reference">
+          <p><strong>monNETtoring is open source.</strong> The implementation, configuration, schemas, and supporting repositories are maintained openly under the <code>monNETtoring</code> GitHub account.</p>
+          <a class="github-link" href="https://github.com/monNETtoring?tab=repositories" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19 1s-1.4-.4-4 1.5a13.4 13.4 0 0 0-6 0C6.4.6 5 1 5 1a5 5 0 0 0-.4 3A5.4 5.4 0 0 0 3.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 9 18v4M9 18c-4.5 2-5-2-7-2" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Browse open-source repositories
+          </a>
+        </div>
+
+        <a class="section-next" href="#contact">
+          <small>04</small>
+          <span><em>Continue to</em>Contact the developers</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+      <div class="topology-divider on-dark" aria-hidden="true">
+        <svg viewBox="0 0 1440 66" preserveAspectRatio="none">
+          <path class="divider-route" d="M0 48 C173 50 283 17 455 25 S729 58 914 39 S1188 11 1440 27"/>
+          <path class="divider-branch" d="M455 25 C516 31 548 54 629 58 M914 39 C962 27 1006 8 1089 9"/>
+          <circle class="divider-node" cx="455" cy="25" r="4.5"/><circle class="divider-node" cx="629" cy="58" r="3.5"/><circle class="divider-node" cx="914" cy="39" r="4.5"/><circle class="divider-node" cx="1089" cy="9" r="3.5"/>
+        </svg>
+      </div>
+      <div class="container">
+        <div class="contact-header">
+          <div>
+            <div class="section-kicker"><span class="monNETtoring-logo motif-mini logo-on-light" aria-hidden="true"></span>Contact the developers</div>
+            <h2>Ask the maintainers <em>directly.</em></h2>
+          </div>
+          <p>Use either developer email, visit the GitHub account, or send one simple question from the form. The Gmail inbox is the default recipient for form messages.</p>
+        </div>
+
+        <div class="contact-layout">
+          <div class="contact-directory" aria-label="monNETtoring contact details">
+            <a class="contact-row contact-primary" href="mailto:monnettoring@gmail.com">
+              <span>Gmail</span>
+              <span><strong>monnettoring@gmail.com</strong><small>Default developer inbox for questions and direct messages.</small><span class="contact-badge">Default</span></span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="contact-row" href="mailto:monnettoring@gmail.com">
+              <span>Project email</span>
+              <span><strong>monnettoring@monnettoring.com</strong><small>Alternative email address for the monNETtoring project.</small></span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="contact-row" href="https://github.com/monNETtoring" target="_blank" rel="noopener noreferrer">
+              <span>GitHub</span>
+              <span><strong>github.com/monNETtoring</strong><small>Repositories, issues, releases, and project activity.</small></span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+
+          <div class="contact-form-wrap">
+            <div class="form-intro">Send a question to the developers</div>
+            <form class="contact-form" id="signup-form">
+              <div class="form-pair">
+                <div class="form-field">
+                  <label for="contact-name">Name</label>
+                  <input class="contact-input" id="contact-name" name="name" type="text" autocomplete="name" placeholder="Your name">
+                </div>
+                <div class="form-field">
+                  <label for="work-email">Your email</label>
+                  <input class="contact-input" id="work-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+                </div>
+              </div>
+              <div class="form-field">
+                <label for="contact-message">Question</label>
+                <textarea class="contact-input" id="contact-message" name="message" placeholder="What would you like to ask the monNETtoring developers?" required></textarea>
+              </div>
+              <button class="button" type="submit">Send question to developers</button>
+              <p class="form-note">This prepares an email to <strong>monnettoring@gmail.com</strong> in your email app so you can review it before sending.</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="brand footer-brand" href="#top" aria-label="monNETtoring home">
+        <span class="brand-mark monNETtoring-logo logo-on-light" aria-hidden="true"></span>
+        <span class="brand-wordmark">monNETtoring</span>
+      </a>
+      <div class="footer-links">
+        <a href="#platform">Architecture</a>
+        <a href="#workflow">Data path</a>
+        <a href="#reliability">Monitoring as code</a>
+        <a href="#contact">Developers</a>
+        <a class="github-link" href="https://github.com/monNETtoring?tab=repositories" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19 1s-1.4-.4-4 1.5a13.4 13.4 0 0 0-6 0C6.4.6 5 1 5 1a5 5 0 0 0-.4 3A5.4 5.4 0 0 0 3.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 9 18v4M9 18c-4.5 2-5-2-7-2" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>Open source · GitHub <span class="external-mark" aria-hidden="true">↗</span></a>
+        <a class="back-to-top" href="#top">Back to top ↑</a>
+      </div>
+      <span class="system-state"><i></i> All systems operational</span>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
